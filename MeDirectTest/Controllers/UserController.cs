@@ -2,7 +2,7 @@
 using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using System.Net.Http;
 
 namespace MeDirectTest.Controllers
 {
@@ -11,12 +11,10 @@ namespace MeDirectTest.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IUserRepository _userRepository;
 
-        public UserController(IUserService userService, IUserRepository userRepository)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -42,26 +40,18 @@ namespace MeDirectTest.Controllers
         [Route("SearchByUserId")]
         public async Task<ActionResult> SearchByUserId(string id)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                return BadRequest("ID cannot be null or empty");
-            }
             UserModel model =  await _userService.SearchByUserIdService(id);
-            return Ok(model);
+            return model is not null ? Ok(model) : NotFound("ID cannot be null or empty");
         }
 
         [HttpPut]
         [Route("UpdateUser")]
         public async Task<ActionResult<UserModel>> UpdateUser(string clientId, string firstName, string lastName)
         {
-            if (String.IsNullOrEmpty(clientId))
-            {
-                return BadRequest("ID cannot be null or empty");
-            }
             UserModel updateModel = _userService.ConstructUserModelService(firstName, lastName);
             updateModel.ClientId = clientId;
             await _userService.UpdateUserService(clientId, updateModel);
-            return Ok(updateModel);
+            return updateModel is not null ? Ok(updateModel) : NotFound("ID cannot be null or empty");
         }
 
         [HttpDelete]
@@ -73,10 +63,10 @@ namespace MeDirectTest.Controllers
                 return BadRequest("ID cannot be null or empty");
             }
             await _userService.DeleteUserService(id);
-            return Ok("User deleted");
+            return id is not null ? Ok("User deleted") : NotFound("ID cannot be null or empty");
         }
 
-
+        
 
     }
 }

@@ -20,14 +20,14 @@ namespace MeDirectTest.Controllers
 
         [HttpPost]
         [Route("CurrencyConversion")]
-        public async Task<ActionResult> GetCurrencyConversion(string clientId, RateRequestModel rateRequestModel)
+        public async Task<ActionResult> CurrencyConversion(RateRequestModel rateRequestModel)
         {
-            var validateId = await _userService.SearchByUserIdService(clientId);
+            var validateId = await _userService.SearchByUserIdService(rateRequestModel.ClientIdRequest);
             if (string.IsNullOrEmpty(validateId.ClientId))
             {
                 return BadRequest("Invalid ID");
             }
-            var response = await _rateService.IntegrationService(clientId, rateRequestModel);        
+            var response = await _rateService.IntegrationService(rateRequestModel.ClientIdRequest, rateRequestModel);        
 
             return Ok(response);
         }
