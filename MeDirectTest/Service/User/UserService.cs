@@ -1,5 +1,5 @@
-﻿using MeDirectTest.Models;
-using MeDirectTest.Repository;
+﻿using MeDirectTest.Data.Repository;
+using MeDirectTest.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeDirectTest.Service.User
@@ -31,13 +31,13 @@ namespace MeDirectTest.Service.User
             return model;
         }
 
-        public async Task<UserModel> ConstructUserModelService(string id, string firstName, string lastName)
+        public async Task<UserModel> ConstructUserModelService(UserModel model)
         {
-            UserModel model = new UserModel()
+            model = new UserModel()
             {
-                ClientId = id,
-                FirstName = firstName,
-                LastName = lastName
+                ClientId = model.ClientId,
+                FirstName = model.FirstName,
+                LastName = model.LastName
             };
             return model;
         }

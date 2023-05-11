@@ -6,6 +6,6 @@ namespace MeDirectTest.Service.User
     {
         Task<UserModel> AddUserService(UserModel model);
         Task<UserModel> SearchByUserIdService(string id);
-        Task<UserModel> ConstructUserModelService(string id, string firstName, string lastName);
+        Task<UserModel> ConstructUserModelService(UserModel model);
     }
 }

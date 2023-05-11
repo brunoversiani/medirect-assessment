@@ -1,6 +1,6 @@
 ﻿using MeDirectTest.Models;
 
-namespace MeDirectTest.Repository
+namespace MeDirectTest.Data.Repository
 {
     public interface IUserRepository
     {
