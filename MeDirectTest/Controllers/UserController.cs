@@ -1,5 +1,5 @@
-﻿using MeDirectTest.Models;
-using MeDirectTest.Repository;
+﻿using MeDirectTest.Data.Repository;
+using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,15 +18,16 @@ namespace MeDirectTest.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("AddUser")]
-        public async Task<ActionResult> AddUser([FromQuery] string id, string firstName, string lastName)
+        public async Task<ActionResult> AddUser([FromBody] UserModel userModel)
         {
-            if (string.IsNullOrEmpty(id))
+            //_userService.ConstructUserModelService(model);
+            if (string.IsNullOrEmpty(userModel.ClientId))
             {
                 return BadRequest("The ID field cannot be empty");
             }
-            var userModel = await _userService.ConstructUserModelService(id, firstName, lastName);
+            
             await _userService.AddUserService(userModel);
 
             return Ok(userModel);
@@ -34,8 +35,8 @@ namespace MeDirectTest.Controllers
 
 
         [HttpGet]
-        [Route("SerchByUserId")]
-        public async Task<ActionResult<UserModel>> SerchByUserId([FromQuery] string id)
+        [Route("SearchByUserId")]
+        public async Task<ActionResult<UserModel>> SearchByUserId([FromQuery] string id)
         {
             if (String.IsNullOrEmpty(id))
             {

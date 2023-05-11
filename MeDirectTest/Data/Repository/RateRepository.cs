@@ -1,7 +1,7 @@
 ﻿using MeDirectTest.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MeDirectTest.Repository
+namespace MeDirectTest.Data.Repository
 {
     public class RateRepository : IRateRepository
     {
@@ -27,7 +27,7 @@ namespace MeDirectTest.Repository
         public async Task<TransactionModel> SearchByTransactionIdRep(string transactionId)
         {
             var filter = _dataContext.TransactionContext.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
-            if (String.IsNullOrEmpty(filter.ToString()))
+            if (string.IsNullOrEmpty(filter.ToString()))
             {
                 throw new Exception("No transactions were found with the ID provided");
             }

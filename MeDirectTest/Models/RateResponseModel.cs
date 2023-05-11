@@ -2,11 +2,10 @@
 
 namespace MeDirectTest.Models
 {
-    public class RateModel
+    public class RateResponseModel
     {
-        [JsonProperty("odata.metadata")]
         public string Date { get; set; }
-        public string Historical { get; set; }
+        public bool Historical { get; set; } = true ? true : false;
         public double Result { get; set; }
         public bool Success { get; set; }
         public Info Info { get; set; }

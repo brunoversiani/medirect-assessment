@@ -1,6 +1,6 @@
 ﻿using MeDirectTest.Models;
 
-namespace MeDirectTest.Repository
+namespace MeDirectTest.Data.Repository
 {
     public class UserRepository : IUserRepository
     {
@@ -25,8 +25,9 @@ namespace MeDirectTest.Repository
         public async Task<UserModel> SearchByUserIdRep(string id)
         {
             var filter = _dataContext.UserContext.FirstOrDefaultAsync(x => x.ClientId == id);
-            if (String.IsNullOrEmpty(filter.ToString()))
+            if (string.IsNullOrEmpty(filter.ToString()))
             {
+                //log
                 throw new Exception("No clients were found with the ID provided");
             }
             else
@@ -40,8 +41,9 @@ namespace MeDirectTest.Repository
             UserModel userById = await SearchByUserIdRep(id);
             if (userById == null)
             {
-                throw new Exception("User not found");
                 //log
+                throw new Exception("User not found");
+                
             }
 
             _dataContext.UserContext.Remove(userById);
