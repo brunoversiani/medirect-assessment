@@ -1,7 +1,7 @@
 ﻿using MeDirectTest.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MeDirectTest.Data.Repository
+namespace MeDirectTest.Data.Repository.Rates
 {
     public class RateRepository : IRateRepository
     {

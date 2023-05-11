@@ -1,4 +1,4 @@
-﻿using MeDirectTest.Data.Repository;
+﻿using MeDirectTest.Data.Repository.Rates;
 using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Newtonsoft.Json;
@@ -34,7 +34,7 @@ namespace MeDirectTest.Service.Rates
         {
             RateResponseModel responseContent = JsonConvert.DeserializeObject<RateResponseModel>(response.Content);
 
-            var rateResponseModel = await ConstructRateResponseModel(responseContent);
+            var rateResponseModel = ConstructRateResponseModel(responseContent);
             TransactionModel transactionModel = await ConstructTransactionModel(clientId, rateResponseModel);
 
             return await _rateRepository.AddTransactionRep(transactionModel);
@@ -62,7 +62,7 @@ namespace MeDirectTest.Service.Rates
             return model;
         }
 
-        private async Task<RateResponseModel> ConstructRateResponseModel(RateResponseModel response)
+        private RateResponseModel ConstructRateResponseModel(RateResponseModel response)
         {
             response = new RateResponseModel()
             {

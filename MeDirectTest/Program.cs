@@ -1,6 +1,7 @@
 global using MeDirectTest.Data;
 global using Microsoft.EntityFrameworkCore;
-using MeDirectTest.Data.Repository;
+using MeDirectTest.Data.Repository.Rates;
+using MeDirectTest.Data.Repository.User;
 using MeDirectTest.Service.Rates;
 using MeDirectTest.Service.User;
 
