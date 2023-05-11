@@ -1,6 +1,5 @@
-﻿using MeDirectTest.Data.Repository;
+﻿using MeDirectTest.Data.Repository.User;
 using MeDirectTest.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MeDirectTest.Service.User
 {
@@ -13,12 +12,18 @@ namespace MeDirectTest.Service.User
             _userRepository = userRepository;
         }
 
+        public async Task<IEnumerable<UserModel>> SearchAllUsersService()
+        {
+            return await _userRepository.SearchAllUsersRep();
+        }
+
         public async Task<UserModel> AddUserService(UserModel model)
         {
-            if (string.IsNullOrEmpty(model.ClientId))
+            UserModel filter = await SearchByUserIdService(model.ClientId);
+            if (filter !=null )
             {
-                throw new Exception($"Method: {nameof(AddUserService)}. Client ID not valid or already exists");
                 //log
+                throw new Exception($"Method: {nameof(AddUserService)}. Client ID already exists");
             }
 
             await _userRepository.AddUserRep(model);
@@ -31,15 +36,44 @@ namespace MeDirectTest.Service.User
             return model;
         }
 
-        public async Task<UserModel> ConstructUserModelService(UserModel model)
+        public async Task<UserModel> UpdateUserService(string clientId, UserModel userModel)
         {
-            model = new UserModel()
+            UserModel referenceModel = await SearchByUserIdService(clientId);
+            if (referenceModel == null)
             {
-                ClientId = model.ClientId,
-                FirstName = model.FirstName,
-                LastName = model.LastName
+                //log
+                throw new Exception("User not found");
+            }
+
+            referenceModel.FirstName = userModel.FirstName;
+            referenceModel.LastName = userModel.LastName;
+
+            await _userRepository.UpdateUserRep( referenceModel);
+            return userModel;
+        }
+
+        public async Task<bool> DeleteUserService(string clientId)
+        {
+            UserModel userModel = await SearchByUserIdService(clientId);
+            if (userModel == null)
+            {
+                //log
+                throw new Exception("User not found");
+            }
+
+            await _userRepository.DeleteUserRep(userModel);
+            return true;
+        }
+
+        public UserModel ConstructUserModelService(string firstName, string lastName)
+        {
+            UserModel userModel = new UserModel()
+            {
+                ClientId = Guid.NewGuid().ToString(),
+                FirstName = firstName,
+                LastName = lastName
             };
-            return model;
+            return userModel;
         }
     }
 }
