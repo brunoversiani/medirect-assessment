@@ -1,8 +1,6 @@
-﻿using MeDirectTest.Data.Repository.User;
-using MeDirectTest.Models;
+﻿using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 
 namespace MeDirectTest.Controllers
 {

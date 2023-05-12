@@ -1,5 +1,4 @@
 ﻿using MeDirectTest.Models;
-using Microsoft.IdentityModel.Tokens;
 
 namespace MeDirectTest.Data.Repository.Rates
 {
@@ -35,31 +34,21 @@ namespace MeDirectTest.Data.Repository.Rates
             return await filter;
         }
 
-        public async Task<IEnumerable<TransactionModel>> SearchTransactionsPerUserRep(string clientId)
+        public async Task<TransactionModel> LastTransactionPerUserRep(string clientId)
         {
             IEnumerable<TransactionModel> listModel = new List<TransactionModel>();
             listModel = _dataContext.TransactionContext.Where(x => x.TrClientId == clientId)
-                                                       .OrderBy(x => x.TransactionTimestamp);
+                                          .OrderByDescending(x => x.TrRateTimestamp);
 
-            if (listModel.IsNullOrEmpty())
+            if ((DateTime.UtcNow - listModel.FirstOrDefault().TransactionTimestamp).TotalMinutes >= 30)
             {
-                throw new Exception("No transactions were found with the ID provided");
+                //log
+                throw new Exception("The rate is older than 30 minutes. Please register a new rate");
             }
 
-            return listModel;
-        }
-
-        public async Task<IEnumerable<TransactionModel>> LastTenTransactionPerUser(IEnumerable<TransactionModel> listModel)
-        {
-
-            listModel.Take(10);
-
-            if (listModel.IsNullOrEmpty())
-            {
-                throw new Exception("No transactions were found with the ID provided");
-            }
-
-            return listModel;
-        }
+            //log This exchange rate is XX minutes old
+            TransactionModel model = listModel.FirstOrDefault();
+            return model;
+        }        
     }
 }

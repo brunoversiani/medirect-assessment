@@ -1,4 +1,6 @@
-﻿using MeDirectTest.Data.Repository.Rates;
+﻿using Azure;
+using MeDirectTest.Data;
+using MeDirectTest.Data.Repository.Rates;
 using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Newtonsoft.Json;
@@ -20,7 +22,7 @@ namespace MeDirectTest.Service.Rates
         public async Task<RestResponse> IntegrationService(string clientid, RateRequestModel requestModel)
         {
             var client = new RestClient($"https://api.apilayer.com/exchangerates_data/convert?to={requestModel.To}&from={requestModel.From}&amount={requestModel.Amount}");
-
+            
             var request = new RestRequest("", Method.Get);
             request.AddHeader("apikey", "6JTABFgsuQ1LK0DTmRyMg6xYd1SYmM1s");
 
@@ -40,10 +42,24 @@ namespace MeDirectTest.Service.Rates
             return await _rateRepository.AddTransactionRep(transactionModel);
         }
 
+        public async Task<TransactionModel> LastRegisterService (string userId)
+        {
+            TransactionModel lastRegister = await _rateRepository.LastTransactionPerUserRep(userId);
+
+            return lastRegister;
+        }
+
+        public async Task<TransactionModel> NewExchangeWithOldRateService(TransactionModel model, double amount)
+        {
+            TransactionModel updatedModel = UpdateOldRateTransactionModel(model, amount);
+            return await _rateRepository.AddTransactionRep(updatedModel);
+        }
+
+        #region Private Model Constructors
         private async Task<TransactionModel> ConstructTransactionModel(string clientId, RateResponseModel rateResponseModel)
         {
             UserModel userModel = await _userService.SearchByUserIdService(clientId);
-            DateTime dateStart = DateTime.MinValue;
+            DateTime dateStart = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
             TransactionModel model = new TransactionModel()
             {
@@ -57,9 +73,28 @@ namespace MeDirectTest.Service.Rates
                 TrRate = rateResponseModel.Info.Rate,
                 TrResult = rateResponseModel.Result,
                 TrRateTimestamp = dateStart.AddSeconds(rateResponseModel.Info.Timestamp),
-                TransactionTimestamp = DateTime.Now
+                TransactionTimestamp = DateTime.UtcNow
             };
             return model;
+        }
+
+        private TransactionModel UpdateOldRateTransactionModel(TransactionModel transactionModel, double amount)
+        {
+            transactionModel = new TransactionModel()
+            {
+                TransactionId = Guid.NewGuid().ToString(),
+                TrClientId = transactionModel.TrClientId,
+                TrFirstName = transactionModel.TrFirstName,
+                TrLastName = transactionModel.TrLastName,
+                TrFromCurrency = transactionModel.TrFromCurrency,
+                TrFromAmount = amount,
+                TrToCurrency = transactionModel.TrToCurrency,
+                TrRate = transactionModel.TrRate,
+                TrResult = transactionModel.TrRate * amount,
+                TrRateTimestamp = transactionModel.TrRateTimestamp,  //old rate timestamp
+                TransactionTimestamp = DateTime.Now //new transaction
+            };
+            return transactionModel;
         }
 
         private RateResponseModel ConstructRateResponseModel(RateResponseModel response)
@@ -84,5 +119,6 @@ namespace MeDirectTest.Service.Rates
             };
             return response;
         }
+        #endregion
     }
 }
