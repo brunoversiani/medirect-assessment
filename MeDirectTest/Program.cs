@@ -34,7 +34,7 @@ var app = builder.Build();
 
 // Use Rate Limiting
 app.UseRateLimiting();
-app.UseClientRateLimiting();
+//app.UseClientRateLimiting();
 
 
 // Configure the HTTP request pipeline.

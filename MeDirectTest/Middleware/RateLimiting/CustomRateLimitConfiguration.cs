@@ -21,7 +21,12 @@ namespace MeDirectTest.Middleware.RateLimiting
     {
         public Task<string> ResolveClientAsync(HttpContext httpContext)
         {
-            return Task.FromResult<string>(httpContext.Request.Query["CustomKey"]);
+            string headerClientId = string.Empty;
+            if(httpContext.Request.Headers.TryGetValue("HeaderClientId", out var values))
+            {
+                headerClientId = values.First();
+            }
+            return Task.FromResult(headerClientId);
         }
     }
 }
