@@ -21,7 +21,7 @@ namespace MeDirectTest.Middleware.RateLimiting
     {
         public Task<string> ResolveClientAsync(HttpContext httpContext)
         {
-            string headerClientId = string.Empty;
+            var headerClientId = string.Empty;
             if(httpContext.Request.Headers.TryGetValue("HeaderClientId", out var values))
             {
                 headerClientId = values.First();
