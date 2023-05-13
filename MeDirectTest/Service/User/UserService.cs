@@ -6,10 +6,12 @@ namespace MeDirectTest.Service.User
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<UserModel>> SearchAllUsersService()
@@ -22,7 +24,7 @@ namespace MeDirectTest.Service.User
             UserModel filter = await SearchByUserIdService(model.ClientId);
             if (filter !=null )
             {
-                //log
+                _logger.Log(LogLevel.Information, "User not found");
                 throw new Exception($"Method: {nameof(AddUserService)}. Client ID already exists");
             }
 
@@ -32,6 +34,12 @@ namespace MeDirectTest.Service.User
 
         public async Task<UserModel> SearchByUserIdService(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                _logger.Log(LogLevel.Warning, "Client ID is missing");
+                return null;
+            }
+            _logger.Log(LogLevel.Information, "User found successfully by its ID");
             UserModel model = await _userRepository.SearchByUserIdRep(id);
             return model;
         }
@@ -47,7 +55,7 @@ namespace MeDirectTest.Service.User
 
             referenceModel.FirstName = userModel.FirstName;
             referenceModel.LastName = userModel.LastName;
-
+            _logger.Log(LogLevel.Information, "User updated successfully");
             await _userRepository.UpdateUserRep( referenceModel);
             return userModel;
         }
@@ -57,8 +65,8 @@ namespace MeDirectTest.Service.User
             UserModel userModel = await SearchByUserIdService(clientId);
             if (userModel == null)
             {
-                //log
-                throw new Exception("User not found");
+                _logger.Log(LogLevel.Error, "Invalid ID. User NOT deleted");
+                return false;
             }
 
             await _userRepository.DeleteUserRep(userModel);
@@ -73,6 +81,7 @@ namespace MeDirectTest.Service.User
                 FirstName = firstName,
                 LastName = lastName
             };
+            _logger.Log(LogLevel.Information, "User model contains new user");
             return userModel;
         }
     }

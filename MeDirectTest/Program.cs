@@ -1,6 +1,6 @@
 global using MeDirectTest.Data;
 global using Microsoft.EntityFrameworkCore;
-using AspNetCoreRateLimit;
+using MeDirectTest.Controllers;
 using MeDirectTest.Data.Repository.Rates;
 using MeDirectTest.Data.Repository.User;
 using MeDirectTest.Middleware.RateLimiting;
@@ -22,6 +22,15 @@ builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRateRepository, RateRepository>();
 
+//Logging
+builder.Services.AddScoped<ILogger, Logger<UserController>>();
+builder.Services.AddScoped<ILogger, Logger<UserService>>();
+builder.Services.AddScoped<ILogger, Logger<UserRepository>>();
+
+builder.Services.AddScoped<ILogger, Logger<RateController>>();
+builder.Services.AddScoped<ILogger, Logger<RateService>>();
+builder.Services.AddScoped<ILogger, Logger<RateRepository>>();
+
 //Rate Limiting
 builder.Services.AddRateLimiting(builder.Configuration);
 
@@ -32,10 +41,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Use Rate Limiting
 app.UseRateLimiting();
-//app.UseClientRateLimiting();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
