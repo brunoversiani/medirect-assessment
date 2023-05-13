@@ -7,5 +7,6 @@ namespace MeDirectTest.Data.Repository.Rates
         Task<TransactionModel> AddTransactionRep(TransactionModel model);
         Task<TransactionModel> SearchByTransactionIdRep(string transactionId);
         Task<TransactionModel> LastTransactionPerUserRep(string clientId);
+        Task<IEnumerable<TransactionModel>> CacheTransactionModel(IEnumerable<TransactionModel> listModel);
     }
 }
