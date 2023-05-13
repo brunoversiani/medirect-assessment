@@ -11,9 +11,9 @@ namespace MeDirectTest.Controllers
     {
         private readonly IUserService _userService;
         private readonly IRateService _rateService;
-        private readonly ILogger _logger;
+        private readonly ILogger<RatesController> _logger;
 
-        public RatesController(IUserService userService, IRateService rateService, ILogger logger)
+        public RatesController(IUserService userService, IRateService rateService, ILogger<RatesController> logger)
         {
             _userService = userService;
             _rateService = rateService;
