@@ -1,4 +1,4 @@
-﻿namespace MeDirectTest.Models
+﻿namespace MeDirectAssessment.Models
 {
 
     public class TransactionModel

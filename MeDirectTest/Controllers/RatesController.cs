@@ -1,9 +1,9 @@
-﻿using MeDirectTest.Models;
-using MeDirectTest.Service.Rates;
-using MeDirectTest.Service.User;
+﻿using MeDirectAssessment.Models;
+using MeDirectAssessment.Service.Rates;
+using MeDirectAssessment.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MeDirectTest.Controllers
+namespace MeDirectAssessment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,6 +25,7 @@ namespace MeDirectTest.Controllers
         public async Task<ActionResult> CurrencyConversion(RateRequestModel rateRequestModel)
         {
             _logger.Log(LogLevel.Information, $"{nameof(CurrencyConversion)} method accessed");
+
             var validateId = await _userService.SearchByUserIdService(rateRequestModel.ClientIdRequest);
             if (string.IsNullOrEmpty(validateId.ClientId))
             {

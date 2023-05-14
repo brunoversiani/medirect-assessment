@@ -1,7 +1,8 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Data;
+using MeDirectAssessment.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace MeDirectTest.Data.Repository.User
+namespace MeDirectAssessment.Data.Repository.User
 {
     public class UserRepository : IUserRepository
     {
@@ -15,7 +16,7 @@ namespace MeDirectTest.Data.Repository.User
             _logger = logger;
             _memoryCache = memoryCache;
         }
-        
+
         public async Task<UserModel> AddUserRep(UserModel model)
         {
             //await _cacheDistributor.CacheUserModel(model);
@@ -65,7 +66,7 @@ namespace MeDirectTest.Data.Repository.User
         }
 
         public async Task<bool> DeleteUserRep(UserModel userModel)
-        {            
+        {
             _dataContext.UserContext.Remove(userModel);
             await _dataContext.SaveChangesAsync();
 
@@ -80,7 +81,7 @@ namespace MeDirectTest.Data.Repository.User
 
         private async Task<IEnumerable<UserModel>> AllUsersCache()
         {
-            
+
             if (_memoryCache.TryGetValue(keyAllUsers, out IEnumerable<UserModel> allUsersModel))
             {
                 _logger.Log(LogLevel.Debug, "Users found in cache");

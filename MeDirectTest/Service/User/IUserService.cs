@@ -1,6 +1,6 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 
-namespace MeDirectTest.Service.User
+namespace MeDirectAssessment.Service.User
 {
     public interface IUserService
     {

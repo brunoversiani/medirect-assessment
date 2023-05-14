@@ -1,7 +1,7 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace MeDirectTest.Data.Repository.Rates
+namespace MeDirectAssessment.Data.Repository.Rates
 {
     public class RateRepository : IRateRepository
     {
@@ -37,6 +37,7 @@ namespace MeDirectTest.Data.Repository.Rates
         public async Task<TransactionModel> SearchByTransactionIdRep(string transactionId)
         {
             _logger.Log(LogLevel.Information, $"{nameof(SearchByTransactionIdRep)} method accessed");
+
             var filter = await _dataContext.TransactionContext.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
             if (string.IsNullOrEmpty(filter.ToString()))
             {
@@ -51,10 +52,7 @@ namespace MeDirectTest.Data.Repository.Rates
         {
             _logger.Log(LogLevel.Information, $"{nameof(LastTransactionPerUserRep)} method accessed");
             IEnumerable<TransactionModel> listModel = new List<TransactionModel>();
-            listModel = _dataContext.TransactionContext.Where(x => x.TrClientId == clientId)
-                                          .OrderByDescending(x => x.TrRateTimestamp);
-
-            //var cacheList = await CacheTransactionModel(listModel);
+            listModel = _dataContext.TransactionContext.Where(x => x.TrClientId == clientId);
 
             if ((DateTime.UtcNow - listModel.FirstOrDefault().TransactionTimestamp).TotalMinutes >= 30)
             {
@@ -66,7 +64,7 @@ namespace MeDirectTest.Data.Repository.Rates
             TransactionModel model = listModel.FirstOrDefault();
             return model;
         }
-                
+
         public async Task<IEnumerable<TransactionModel>> CacheTransactionModel(IEnumerable<TransactionModel> listModel)
         {
             _logger.Log(LogLevel.Information, $"{nameof(CacheTransactionModel)} method accessed");
@@ -84,36 +82,5 @@ namespace MeDirectTest.Data.Repository.Rates
 
             return listCache;
         }
-        /*
-         * 
-        private async Task<Product[]> GetProductsAsync() {
-        var cacheKey = "transactionKey";
-        //checks if cache entries exists
-        if (!_memoryCache.TryGetValue(cacheKey, out transactionModel)) {
-            //calling the server
-
-            HttpClient client = new HttpClient();
-            var stream = client.GetStreamAsync("https://northwind.vercel.app/api/products");
-            productList = await JsonSerializer.DeserializeAsync<Product[]>(await stream);
-
-            //setting up cache options
-            var cacheExpiryOptions = new MemoryCacheEntryOptions {
-                AbsoluteExpiration = DateTime.Now.AddSeconds(50),
-                Priority = CacheItemPriority.High,
-                SlidingExpiration = TimeSpan.FromSeconds(20)
-            };
-            //setting cache entries
-            _memoryCache.Set(cacheKey, productList, cacheExpiryOptions);
-
-            Console.WriteLine("Data from API (cache miss)");
-        } else {
-            Console.WriteLine("Data from CACHE (cache hit)");
-        }
-
-        return productList!;
-        }
-
-         * 
-         */
     }
 }

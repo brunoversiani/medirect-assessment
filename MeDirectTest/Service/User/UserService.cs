@@ -1,7 +1,7 @@
-﻿using MeDirectTest.Data.Repository.User;
-using MeDirectTest.Models;
+﻿using MeDirectAssessment.Data.Repository.User;
+using MeDirectAssessment.Models;
 
-namespace MeDirectTest.Service.User
+namespace MeDirectAssessment.Service.User
 {
     public class UserService : IUserService
     {
@@ -22,7 +22,7 @@ namespace MeDirectTest.Service.User
         public async Task<UserModel> AddUserService(UserModel model)
         {
             UserModel filter = await SearchByUserIdService(model.ClientId);
-            if (filter !=null )
+            if (filter != null)
             {
                 _logger.Log(LogLevel.Information, "Client already exists");
                 throw new Exception($"Method: {nameof(AddUserService)}. Client already exists");
@@ -43,14 +43,14 @@ namespace MeDirectTest.Service.User
             UserModel referenceModel = await SearchByUserIdService(clientId);
             if (referenceModel == null)
             {
-                _logger.Log(LogLevel.Error, "Invalid ID. User NOT updated");
+                _logger.Log(LogLevel.Error, $"Invalid ID: {clientId}. User NOT updated");
                 throw new Exception("User not found");
             }
 
             referenceModel.FirstName = userModel.FirstName;
             referenceModel.LastName = userModel.LastName;
 
-            await _userRepository.UpdateUserRep( referenceModel);
+            await _userRepository.UpdateUserRep(referenceModel);
             return userModel;
         }
 
@@ -75,7 +75,7 @@ namespace MeDirectTest.Service.User
                 FirstName = firstName,
                 LastName = lastName
             };
-            _logger.Log(LogLevel.Information, "User model contains new user");
+            _logger.Log(LogLevel.Information, "User model contains a new user");
             return userModel;
         }
     }

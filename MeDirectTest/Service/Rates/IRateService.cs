@@ -1,7 +1,7 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 using RestSharp;
 
-namespace MeDirectTest.Service.Rates
+namespace MeDirectAssessment.Service.Rates
 {
     public interface IRateService
     {
