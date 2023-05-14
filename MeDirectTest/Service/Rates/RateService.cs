@@ -66,7 +66,8 @@ namespace MeDirectTest.Service.Rates
         {
             _logger.Log(LogLevel.Information, $"{nameof(ConstructTransactionModel)} method accessed");
             UserModel userModel = await _userService.SearchByUserIdService(clientId);
-            DateTime dateStart = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+            DateTime dateStartUnix = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
             TransactionModel model = new TransactionModel()
             {
@@ -79,7 +80,7 @@ namespace MeDirectTest.Service.Rates
                 TrToCurrency = rateResponseModel.Query.To,
                 TrRate = rateResponseModel.Info.Rate,
                 TrResult = rateResponseModel.Result,
-                TrRateTimestamp = dateStart.AddSeconds(rateResponseModel.Info.Timestamp),
+                TrRateTimestamp = dateStartUnix.AddSeconds(rateResponseModel.Info.Timestamp),
                 TransactionTimestamp = DateTime.UtcNow
             };
 
