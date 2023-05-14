@@ -24,8 +24,8 @@ namespace MeDirectTest.Service.User
             UserModel filter = await SearchByUserIdService(model.ClientId);
             if (filter !=null )
             {
-                _logger.Log(LogLevel.Information, "User not found");
-                throw new Exception($"Method: {nameof(AddUserService)}. Client ID already exists");
+                _logger.Log(LogLevel.Information, "Client already exists");
+                throw new Exception($"Method: {nameof(AddUserService)}. Client already exists");
             }
 
             await _userRepository.AddUserRep(model);
@@ -34,12 +34,6 @@ namespace MeDirectTest.Service.User
 
         public async Task<UserModel> SearchByUserIdService(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                _logger.Log(LogLevel.Warning, "Client ID is missing");
-                return null;
-            }
-            _logger.Log(LogLevel.Information, "User found successfully by its ID");
             UserModel model = await _userRepository.SearchByUserIdRep(id);
             return model;
         }
@@ -49,13 +43,13 @@ namespace MeDirectTest.Service.User
             UserModel referenceModel = await SearchByUserIdService(clientId);
             if (referenceModel == null)
             {
-                //log
+                _logger.Log(LogLevel.Error, "Invalid ID. User NOT updated");
                 throw new Exception("User not found");
             }
 
             referenceModel.FirstName = userModel.FirstName;
             referenceModel.LastName = userModel.LastName;
-            _logger.Log(LogLevel.Information, "User updated successfully");
+
             await _userRepository.UpdateUserRep( referenceModel);
             return userModel;
         }

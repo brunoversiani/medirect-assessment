@@ -31,6 +31,18 @@ builder.Services.AddScoped<ILogger, Logger<RateController>>();
 builder.Services.AddScoped<ILogger, Logger<RateService>>();
 builder.Services.AddScoped<ILogger, Logger<RateRepository>>();
 
+//var loggerFactory = LoggerFactory.Create(builder =>
+//{
+//    builder
+//        .AddFilter("Microsoft", LogLevel.Information)
+//        .AddFilter("System", LogLevel.Information)
+//        .AddFilter("TestRx.Program", LogLevel.Information)
+//        .AddConsole();
+//});
+
+//ILogger logger = loggerFactory.CreateLogger<Program>();
+
+
 //Rate Limiting
 builder.Services.AddRateLimiting(builder.Configuration);
 

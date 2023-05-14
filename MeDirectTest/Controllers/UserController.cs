@@ -1,7 +1,6 @@
 ﻿using MeDirectTest.Models;
 using MeDirectTest.Service.User;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace MeDirectTest.Controllers
 {
@@ -10,9 +9,9 @@ namespace MeDirectTest.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger _logger;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService userService, ILogger logger)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
             _logger = logger;
@@ -22,24 +21,11 @@ namespace MeDirectTest.Controllers
         [Route("AddUser")]
         public async Task<ActionResult> AddUser(string firstName, string lastName)
         {
-            _logger.Log(LogLevel.Information, $"{nameof(AddUser)} method accessed");
-            try
-            {
-                UserModel userModel = _userService.ConstructUserModelService(firstName, lastName);
-                await _userService.AddUserService(userModel);
+            UserModel userModel = _userService.ConstructUserModelService(firstName, lastName);
+            await _userService.AddUserService(userModel);
 
-                return Ok(userModel);
-            }
-            catch (Exception e)
-            {
-                
-                throw new Exception("123123123123123");
-            }
-            //if(string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
-            //{
-            //    throw
-            //}
-            
+            _logger.Log(LogLevel.Information, $"Endpoint {nameof(AddUser)} finished");
+            return Ok(userModel);
         }
 
         [HttpGet]
@@ -48,6 +34,8 @@ namespace MeDirectTest.Controllers
         {
             _logger.Log(LogLevel.Information, $"{nameof(SearchAllUsers)} method accessed");
             IEnumerable<UserModel> userModel = await _userService.SearchAllUsersService();
+
+            _logger.Log(LogLevel.Information, $"Endpoint {nameof(SearchAllUsers)} finished");
             return Ok(userModel);
         }
 
@@ -56,21 +44,10 @@ namespace MeDirectTest.Controllers
         public async Task<ActionResult> SearchByUserId(string id)
         {
             _logger.Log(LogLevel.Information, $"{nameof(SearchByUserId)} method accessed");
-            try
-            {
-                UserModel model = await _userService.SearchByUserIdService(id);
-                return Ok(model);
-            }
-            catch (Exception e)
-            {
-                //if (_logger.IsEnabled(LogLevel.Error))
-                //{
-                //    _logger.LogError("The user ID cannot be empty");
-                //}
-                throw new Exception(e.Message);
-            }
+            UserModel model = await _userService.SearchByUserIdService(id);
             
-            //return model is not null ? Ok(model) : NotFound("ID cannot be null or empty");
+            _logger.Log(LogLevel.Information, $"Endpoint {nameof(SearchByUserId)} finished");
+            return model is not null ? Ok(model) : NotFound("ID cannot be null or empty");
         }
 
         [HttpPut]
@@ -80,7 +57,10 @@ namespace MeDirectTest.Controllers
             _logger.Log(LogLevel.Information, $"{nameof(UpdateUser)} method accessed");
             UserModel updateModel = _userService.ConstructUserModelService(firstName, lastName);
             updateModel.ClientId = clientId;
+
             await _userService.UpdateUserService(clientId, updateModel);
+
+            _logger.Log(LogLevel.Information, $"Endpoint {nameof(UpdateUser)} finished");
             return updateModel is not null ? Ok(updateModel) : NotFound("ID cannot be null or empty");
         }
 
@@ -91,43 +71,13 @@ namespace MeDirectTest.Controllers
             _logger.Log(LogLevel.Information, $"{nameof(DeleteUser)} method accessed");
             if (String.IsNullOrEmpty(id))
             {
+                _logger.Log(LogLevel.Error, $"ID field is required");
                 return BadRequest("ID cannot be null or empty");
             }
             await _userService.DeleteUserService(id);
+
+            _logger.Log(LogLevel.Information, $"Endpoint {nameof(DeleteUser)} finished");
             return id is not null ? Ok("User deleted") : NotFound("ID cannot be null or empty");
         }
-
-        /*
-         * 
-        private async Task<Product[]> GetProductsAsync() {
-        var cacheKey = "transactionKey";
-        //checks if cache entries exists
-        if (!_memoryCache.TryGetValue(cacheKey, out transactionModel)) {
-            //calling the server
-
-            HttpClient client = new HttpClient();
-            var stream = client.GetStreamAsync("https://northwind.vercel.app/api/products");
-            productList = await JsonSerializer.DeserializeAsync<Product[]>(await stream);
-
-            //setting up cache options
-            var cacheExpiryOptions = new MemoryCacheEntryOptions {
-                AbsoluteExpiration = DateTime.Now.AddSeconds(50),
-                Priority = CacheItemPriority.High,
-                SlidingExpiration = TimeSpan.FromSeconds(20)
-            };
-            //setting cache entries
-            _memoryCache.Set(cacheKey, productList, cacheExpiryOptions);
-
-            Console.WriteLine("Data from API (cache miss)");
-        } else {
-            Console.WriteLine("Data from CACHE (cache hit)");
-        }
-
-        return productList!;
-        }
-
-         * 
-         */
-
     }
 }
