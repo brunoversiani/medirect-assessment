@@ -1,7 +1,7 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MeDirectTest.Data.Maps
+namespace MeDirectAssessment.Data.Maps
 {
     public class TransactionMap : IEntityTypeConfiguration<TransactionModel>
     {

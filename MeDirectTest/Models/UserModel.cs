@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MeDirectTest.Models
+namespace MeDirectAssessment.Models
 {
     public class UserModel
     {
@@ -8,6 +8,6 @@ namespace MeDirectTest.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        
+
     }
 }

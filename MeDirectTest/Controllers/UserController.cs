@@ -1,8 +1,8 @@
-﻿using MeDirectTest.Models;
-using MeDirectTest.Service.User;
+﻿using MeDirectAssessment.Models;
+using MeDirectAssessment.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MeDirectTest.Controllers
+namespace MeDirectAssessment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,8 +19,13 @@ namespace MeDirectTest.Controllers
 
         [HttpPost]
         [Route("AddUser")]
-        public async Task<ActionResult> AddUser(string firstName, string lastName)
+        public async Task<IActionResult> AddUser(string firstName, string lastName)
         {
+            if(string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            {
+                _logger.Log(LogLevel.Debug, $"First and last name cannot be empty or null");
+                return BadRequest("Invalid Name");
+            }
             UserModel userModel = _userService.ConstructUserModelService(firstName, lastName);
             await _userService.AddUserService(userModel);
 
@@ -30,9 +35,10 @@ namespace MeDirectTest.Controllers
 
         [HttpGet]
         [Route("SearchAllUsers")]
-        public async Task<ActionResult<IEnumerable<UserModel>>> SearchAllUsers()
+        public async Task<IActionResult> SearchAllUsers()
         {
             _logger.Log(LogLevel.Information, $"{nameof(SearchAllUsers)} method accessed");
+
             IEnumerable<UserModel> userModel = await _userService.SearchAllUsersService();
 
             _logger.Log(LogLevel.Information, $"Endpoint {nameof(SearchAllUsers)} finished");
@@ -41,18 +47,18 @@ namespace MeDirectTest.Controllers
 
         [HttpGet]
         [Route("SearchByUserId")]
-        public async Task<ActionResult> SearchByUserId(string id)
+        public async Task<IActionResult> SearchByUserId(string id)
         {
             _logger.Log(LogLevel.Information, $"{nameof(SearchByUserId)} method accessed");
             UserModel model = await _userService.SearchByUserIdService(id);
-            
+
             _logger.Log(LogLevel.Information, $"Endpoint {nameof(SearchByUserId)} finished");
-            return model is not null ? Ok(model) : NotFound("ID cannot be null or empty");
+            return model is not null ? Ok(model) : NotFound("ID is not valid");
         }
 
         [HttpPut]
         [Route("UpdateUser")]
-        public async Task<ActionResult<UserModel>> UpdateUser(string clientId, string firstName, string lastName)
+        public async Task<IActionResult> UpdateUser(string clientId, string firstName, string lastName)
         {
             _logger.Log(LogLevel.Information, $"{nameof(UpdateUser)} method accessed");
             UserModel updateModel = _userService.ConstructUserModelService(firstName, lastName);
@@ -66,10 +72,10 @@ namespace MeDirectTest.Controllers
 
         [HttpDelete]
         [Route("DeleteUser")]
-        public async Task<ActionResult<UserModel>> DeleteUser([FromQuery] string id)
+        public async Task<IActionResult> DeleteUser([FromQuery] string id)
         {
             _logger.Log(LogLevel.Information, $"{nameof(DeleteUser)} method accessed");
-            if (String.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
             {
                 _logger.Log(LogLevel.Error, $"ID field is required");
                 return BadRequest("ID cannot be null or empty");

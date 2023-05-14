@@ -1,11 +1,11 @@
-﻿using MeDirectTest.Data.Maps;
-using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
+using MeDirectAssessment.Data.Maps;
 
-namespace MeDirectTest.Data
+namespace MeDirectAssessment.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext>options) : base(options) { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<TransactionModel> TransactionContext { get; set; }
         public DbSet<UserModel> UserContext { get; set; }

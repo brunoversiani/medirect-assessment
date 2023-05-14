@@ -1,6 +1,6 @@
 ﻿using AspNetCoreRateLimit;
 
-namespace MeDirectTest.Middleware.RateLimiting
+namespace MeDirectAssessment.Middleware.RateLimiting
 {
     internal static class RateLimitingMiddleware
     {
@@ -8,8 +8,8 @@ namespace MeDirectTest.Middleware.RateLimiting
         {
             services.AddMemoryCache();
 
-            services.Configure<ClientRateLimitOptions>(options => configuration.GetSection("ClientRateLimitSettings").Bind(options));           
-            
+            services.Configure<ClientRateLimitOptions>(options => configuration.GetSection("ClientRateLimitSettings").Bind(options));
+
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, CustomRateLimitConfiguration>();
             services.AddInMemoryRateLimiting();

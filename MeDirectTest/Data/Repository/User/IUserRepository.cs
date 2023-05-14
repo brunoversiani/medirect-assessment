@@ -1,6 +1,6 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 
-namespace MeDirectTest.Data.Repository.User
+namespace MeDirectAssessment.Data.Repository.User
 {
     public interface IUserRepository
     {

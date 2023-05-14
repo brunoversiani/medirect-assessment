@@ -1,6 +1,6 @@
-﻿using MeDirectTest.Models;
+﻿using MeDirectAssessment.Models;
 
-namespace MeDirectTest.Data.Repository.Rates
+namespace MeDirectAssessment.Data.Repository.Rates
 {
     public interface IRateRepository
     {

@@ -1,11 +1,11 @@
-global using MeDirectTest.Data;
 global using Microsoft.EntityFrameworkCore;
-using MeDirectTest.Controllers;
-using MeDirectTest.Data.Repository.Rates;
-using MeDirectTest.Data.Repository.User;
-using MeDirectTest.Middleware.RateLimiting;
-using MeDirectTest.Service.Rates;
-using MeDirectTest.Service.User;
+using MeDirectAssessment.Controllers;
+using MeDirectAssessment.Data;
+using MeDirectAssessment.Data.Repository.Rates;
+using MeDirectAssessment.Data.Repository.User;
+using MeDirectAssessment.Middleware.RateLimiting;
+using MeDirectAssessment.Service.Rates;
+using MeDirectAssessment.Service.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services.AddScoped<ILogger, Logger<UserController>>();
 builder.Services.AddScoped<ILogger, Logger<UserService>>();
 builder.Services.AddScoped<ILogger, Logger<UserRepository>>();
 
-builder.Services.AddScoped<ILogger, Logger<RateController>>();
+builder.Services.AddScoped<ILogger, Logger<RatesController>>();
 builder.Services.AddScoped<ILogger, Logger<RateService>>();
 builder.Services.AddScoped<ILogger, Logger<RateRepository>>();
 

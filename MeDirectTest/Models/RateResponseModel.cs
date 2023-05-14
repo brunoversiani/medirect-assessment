@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace MeDirectTest.Models
+namespace MeDirectAssessment.Models
 {
     public class RateResponseModel
     {
@@ -14,7 +14,7 @@ namespace MeDirectTest.Models
 
     public class Info
     {
-        public double Rate{ get; set; }
+        public double Rate { get; set; }
         public long Timestamp { get; set; }
     }
 

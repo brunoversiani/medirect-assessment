@@ -1,7 +1,7 @@
 ﻿using AspNetCoreRateLimit;
 using Microsoft.Extensions.Options;
 
-namespace MeDirectTest.Middleware.RateLimiting
+namespace MeDirectAssessment.Middleware.RateLimiting
 {
     internal class CustomRateLimitConfiguration : RateLimitConfiguration
     {
@@ -22,7 +22,7 @@ namespace MeDirectTest.Middleware.RateLimiting
         public Task<string> ResolveClientAsync(HttpContext httpContext)
         {
             var headerClientId = string.Empty;
-            if(httpContext.Request.Headers.TryGetValue("HeaderClientId", out var values))
+            if (httpContext.Request.Headers.TryGetValue("HeaderClientId", out var values))
             {
                 headerClientId = values.First();
             }
